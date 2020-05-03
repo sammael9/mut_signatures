@@ -2,7 +2,6 @@ import logging
 import random
 from math import pi
 from operator import attrgetter as atg
-import numpy as np
 
 
 class Display:
