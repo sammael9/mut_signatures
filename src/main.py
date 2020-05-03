@@ -25,7 +25,7 @@ reconstructed_matrix = reconstructed_matrix.sort_values(by='Somatic Mutation Typ
 cosmic_catalog = cosmic_catalog.sort_values(by='Somatic Mutation Type', axis=0)
 cosmic_catalog = cosmic_catalog.loc[:, ~cosmic_catalog.columns.str.contains('^Unnamed')]
 
-chosen = 'intestine2'
+chosen = ['colon1', 'colon2', 'colon3']
 
 my_input = mutational_matrix[chosen].values
 my_catalog = cosmic_catalog.loc[:, cosmic_catalog.columns.str.contains('^Signature')].values
@@ -37,20 +37,20 @@ my_contribution = contribution_matrix[chosen].values
 diameter_max = 100
 diameter_min = 15
 
-myDisplay = fireworks.Display(firework_count=15, dimensions=30, dimension_min=0, dimension_max=1000,
+myDisplay = fireworks.Display(firework_count=15, dimensions=30, dimensions2=3, dimension_min=0, dimension_max=1000,
                               diameter_min=15, diameter_max=100, spark_min=10, spark_max=50, gaussian_spark_count=10,
-                              fitness_function=fitness.fitness_manhattan_similarity_sum, catalog=my_catalog,
-                              mutational_data=my_input, spark_dimension_count=10, dimension_limit=False)
+                              fitness_function=fitness.fitness_manhattan_similarity_avg, catalog=my_catalog,
+                              mutational_data=my_input, spark_dimension_count=12, dimension_limit=True)
 myDisplay.create_fireworks(None)
 myDisplay.showtime()
 
-watcher = Watcher(iterations=15, threshold=5, starting_iteration=10, fw_display=myDisplay)
+watcher = Watcher(iterations=15, threshold=0.3, starting_iteration=10, fw_display=myDisplay)
 
-watcher.iterate(for_range=range(0, 500), reduction=0.99)
+watcher.iterate(for_range=range(0, 200), reduction=0.99)
 
 logging.info("Finished iterating. Comparing solutions.")
 
-new_reconstructed = np.dot(np.array(my_catalog), np.array(myDisplay.best_spark.position))
+new_reconstructed = np.dot(np.array(my_catalog), np.array(myDisplay.best_spark.position).transpose())
 
 FW_result = np.average(paired_distances(
     np.array(new_reconstructed).reshape(-1, 1), np.array(my_input).reshape(-1, 1), metric='manhattan'))

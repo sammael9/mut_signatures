@@ -6,11 +6,12 @@ from operator import attrgetter as atg
 
 class Display:
 
-    def __init__(self, firework_count, dimensions, dimension_min, dimension_max, diameter_min, diameter_max, spark_min,
-                 spark_max, gaussian_spark_count, fitness_function, catalog, mutational_data, spark_dimension_count,
-                 dimension_limit):
+    def __init__(self, firework_count, dimensions, dimensions2, dimension_min, dimension_max, diameter_min,
+                 diameter_max, spark_min, spark_max, gaussian_spark_count, fitness_function, catalog, mutational_data,
+                 spark_dimension_count, dimension_limit):
         self.firework_count = firework_count
         self.dimensions = dimensions
+        self.dimensions2 = dimensions2
         self.dimension_min = dimension_min
         self.dimension_max = dimension_max
         self.diameter_min = diameter_min
@@ -48,8 +49,11 @@ class Display:
                 diameter = random.uniform(self.diameter_min, self.diameter_max)
                 spark_count = self.count_sparks(diameter)
                 firework_dimensions = []
-                for _ in range(0, self.dimensions):
-                    firework_dimensions.append(random.uniform(self.dimension_min, self.dimension_max))
+                for _ in range(0, self.dimensions2):
+                    firework_dimension_list = []
+                    for _ in range (0, self.dimensions):
+                        firework_dimension_list.append(random.uniform(self.dimension_min, self.dimension_max))
+                    firework_dimensions.append(firework_dimension_list)
                 self.fireworks.append(Firework(diameter, spark_count, firework_dimensions, self.dimension_max,
                                                self.dimension_min, self.spark_dimension_count, self.dimension_limit))
         else:
@@ -91,15 +95,18 @@ class Display:
             return sorted_list[0:self.firework_count]
 
     def generate_gaussian_spark(self, spark):
-        positions = []
-        for index, dimension in enumerate(spark.position):
-            positions.append(random.uniform(dimension, self.best_solution.best_spark.position[index]))
-        if self.dimension_limit:
-            to_keep_indexes = random.sample(range(0, len(positions)), random.randint(
-                len(positions) - self.spark_dimension_count, len(positions) - self.spark_dimension_count * 0.5))
-            for index in to_keep_indexes:
-                positions[index] = 0
-        return Spark(positions)
+        all_positions = []
+        for index1, dimension_list in enumerate(spark.position):
+            positions = []
+            for index2, dimension in enumerate(dimension_list):
+                positions.append(random.uniform(dimension, self.best_solution.best_spark.position[index1][index2]))
+            if self.dimension_limit:
+                to_keep_indexes = random.sample(range(0, len(positions)), random.randint(
+                    len(positions) - self.spark_dimension_count, len(positions) - self.spark_dimension_count * 0.5))
+                for index in to_keep_indexes:
+                    positions[index] = 0
+            all_positions.append(positions)
+        return Spark(all_positions)
 
     def count_sparks(self, diameter):
         max_area = self.diameter_max * self.diameter_max * pi
@@ -148,24 +155,27 @@ class Firework:
 
     def explode(self):
         for i in range(0, self.spark_count):
-            position = []
-            for dimension in self.dimensions:
-                if dimension + self.diameter > self.dimension_max:
-                    if dimension - self.diameter < self.dimension_min:
-                        position.append(random.uniform(self.dimension_min, self.dimension_max))
+            all_positions = []
+            for dimension_list in self.dimensions:
+                position = []
+                for dimension in dimension_list:
+                    if dimension + self.diameter > self.dimension_max:
+                        if dimension - self.diameter < self.dimension_min:
+                            position.append(random.uniform(self.dimension_min, self.dimension_max))
+                        else:
+                            position.append(random.uniform(dimension - self.diameter, self.dimension_max))
                     else:
-                        position.append(random.uniform(dimension - self.diameter, self.dimension_max))
-                else:
-                    if dimension - self.diameter < self.dimension_min:
-                        position.append(random.uniform(self.dimension_min, dimension + self.diameter))
-                    else:
-                        position.append(random.uniform(dimension - self.diameter, dimension + self.diameter))
-            if self.dimension_limit:
-                to_keep_indexes = random.sample(range(0, len(position)), random.randint(
-                    len(position) - self.spark_dimension_count, len(position) - self.spark_dimension_count * 0.5))
-                for index in to_keep_indexes:
-                    position[index] = 0
-            self.sparks.append(Spark(position))
+                        if dimension - self.diameter < self.dimension_min:
+                            position.append(random.uniform(self.dimension_min, dimension + self.diameter))
+                        else:
+                            position.append(random.uniform(dimension - self.diameter, dimension + self.diameter))
+                if self.dimension_limit:
+                    to_keep_indexes = random.sample(range(0, len(position)), random.randint(
+                        len(position) - self.spark_dimension_count, len(position) - self.spark_dimension_count * 0.5))
+                    for index in to_keep_indexes:
+                        position[index] = 0
+                all_positions.append(position)
+            self.sparks.append(Spark(all_positions))
 
     def find_best_spark(self):
         self.best_spark = max(self.sparks, key=atg('fitness'))
