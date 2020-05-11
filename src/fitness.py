@@ -9,7 +9,7 @@ def fitness_random(catalog_matrix, exposure_data, original_data):
 
 def fitness_manhattan_similarity_sum(catalog_matrix, exposure_data, original_data):
     new_matrix = np.dot(np.array(catalog_matrix), np.array(exposure_data))
-    similarity = paired_distances(new_matrix.reshape(-1, 1), np.array(original_data).reshape(-1, 1), metric='manhattan')
+    similarity = paired_distances(new_matrix.reshape(1, -1), np.array(original_data).reshape(1, -1), metric='euclidean')
     return - np.sum(similarity)
 
 

@@ -44,9 +44,9 @@ myDisplay = fireworks.Display(firework_count=15, dimensions=30, dimension_min=0,
 myDisplay.create_fireworks(None)
 myDisplay.showtime()
 
-watcher = Watcher(iterations=15, threshold=5, starting_iteration=10, fw_display=myDisplay)
+watcher = Watcher(iterations=15, threshold=0.001, starting_iteration=10, fw_display=myDisplay)
 
-watcher.iterate(for_range=range(0, 500), reduction=0.99)
+watcher.iterate(for_range=range(0, 200), reduction=0.99)
 
 logging.info("Finished iterating. Comparing solutions.")
 
@@ -56,6 +56,14 @@ FW_result = np.average(paired_distances(
     np.array(new_reconstructed).reshape(-1, 1), np.array(my_input).reshape(-1, 1), metric='manhattan'))
 MP_result = np.average(paired_distances(
     np.array(my_reconstructed).reshape(-1, 1), np.array(my_input).reshape(-1, 1), metric='manhattan'))
+FW_result2 = np.average(paired_distances(
+    np.array(new_reconstructed).reshape(1, -1), np.array(my_input).reshape(1, -1), metric='cosine'))
+MP_resul2 = np.average(paired_distances(
+    np.array(my_reconstructed).reshape(1, -1), np.array(my_input).reshape(1, -1), metric='cosine'))
+FW_result3 = np.average(paired_distances(
+    np.array(new_reconstructed).reshape(1, -1), np.array(my_input).reshape(1, -1), metric='euclidean'))
+MP_resul3 = np.average(paired_distances(
+    np.array(my_reconstructed).reshape(1, -1), np.array(my_input).reshape(1, -1), metric='euclidean'))
 
 logging.info("The End.")
 
