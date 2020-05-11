@@ -32,30 +32,46 @@ my_catalog = cosmic_catalog.loc[:, cosmic_catalog.columns.str.contains('^Signatu
 my_reconstructed = reconstructed_matrix[chosen].values
 my_contribution = contribution_matrix[chosen].values
 
+signeR_matrix = pd.read_csv(r'../resources/21_breast_cancers.mutations.txt', delimiter='\t')
+signeR_contribution = pd.read_csv(r'../resources/exposures_signeR.csv')
+signeR_signatures = pd.read_csv(r'../resources/signatures_signeR.csv')
+signeR_matrix = signeR_matrix.loc[:, ~signeR_matrix.columns.str.contains('^Unnamed')].values
+signeR_contribution = signeR_contribution.loc[:, ~signeR_contribution.columns.str.contains('^Unnamed')].values
+signeR_signatures = signeR_signatures.loc[:, ~signeR_signatures.columns.str.contains('^Unnamed')].values
+signeR_reconstructed = np.dot(signeR_signatures, signeR_contribution)
+signeR_reconstructed = signeR_reconstructed.transpose()
+signeR_similarity = paired_distances(signeR_reconstructed.reshape(-1, 1), signeR_matrix.reshape(-1, 1),
+                                     metric='manhattan')
+signeR_similariry_avg_score = np.average(signeR_similarity)
+signeR_similariry_sum_score = np.sum(signeR_similarity)
+
 # Initialize fireworks display for the first input column
 
 diameter_max = 100
 diameter_min = 15
 
-my_display = fireworks.Display(firework_count=15, dimensions=30, dimensions2=len(chosen), dimension_min=0, dimension_max=1000,
-                               diameter_min=15, diameter_max=100, spark_min=10, spark_max=50, gaussian_spark_count=10,
+my_display = fireworks.Display(firework_count=15, dimensions_exp_1=5, dimensions_exp_2=21, dimensions_sig_1=96,
+                               dimensions_sig_2=5, dimension_exp_min=0, dimension_exp_max=1000, dimension_sig_min=0,
+                               dimension_sig_max=1, diameter_exp_min=15, diameter_exp_max=100, spark_min=10,
+                               spark_max=50, gaussian_spark_count=10,
                                fitness_function=fitness.fitness_manhattan_similarity_sum, catalog=my_catalog,
-                               mutational_data=my_input, spark_dimension_count=12, dimension_limit=True)
+                               mutational_data=signeR_matrix, spark_dimension_count=12, dimension_limit=False)
 my_display.create_fireworks(None)
 my_display.showtime()
 
-watcher = Watcher(iterations=15, threshold=0.3, starting_iteration=10, fw_display=my_display)
+watcher = Watcher(iterations=15, threshold=100, starting_iteration=10, fw_display=my_display)
 
-watcher.iterate(for_range=range(0, 100), reduction=0.98)
+watcher.iterate(for_range=range(0, 750), reduction=0.995)
 
 logging.info("Finished iterating. Comparing solutions.")
 
-new_reconstructed = np.dot(np.array(my_catalog), np.array(my_display.best_spark.position).transpose())
+old_reconstructed = np.dot(np.array(signeR_signatures), np.array(signeR_contribution))
+new_reconstructed = np.dot(np.array(my_display.best_spark.position_signature).transpose(),
+                           np.array(my_display.best_spark.position_exposure).transpose())
 
 FW_result = np.average(paired_distances(
-    np.array(new_reconstructed).reshape(-1, 1), np.array(my_input).reshape(-1, 1), metric='manhattan'))
-MP_result = np.average(paired_distances(
-    np.array(my_reconstructed).reshape(-1, 1), np.array(my_input).reshape(-1, 1), metric='manhattan'))
+    np.array(new_reconstructed).reshape(-1, 1), np.array(signeR_matrix).reshape(-1, 1), metric='manhattan'))
+SR_result = np.average(paired_distances(
+    np.array(old_reconstructed).transpose().reshape(-1, 1), np.array(signeR_matrix).reshape(-1, 1), metric='manhattan'))
 
 logging.info("The End.")
-

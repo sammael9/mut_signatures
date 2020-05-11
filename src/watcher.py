@@ -12,8 +12,8 @@ class Watcher:
     def iterate(self, for_range, reduction):
         fitness_list = []
         for i in for_range:
-            diameter_max = self.fw_display.diameter_max * reduction
-            diameter_min = self.fw_display.diameter_min * reduction
+            diameter_max = self.fw_display.diameter_exp_max * reduction
+            diameter_min = self.fw_display.diameter_exp_min * reduction
             new_starting_positions = self.fw_display.prepare_new_iteration(False, diameter_max, diameter_min)
             self.fw_display.create_fireworks(new_starting_positions)
             self.fw_display.showtime()
