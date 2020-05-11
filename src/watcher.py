@@ -20,11 +20,11 @@ class Watcher:
             logging.info("Completed iteration no. " + str(i))
             if i > 9:
                 fitness_list.append(self.fw_display.best_spark.fitness)
-            if len(fitness_list) == self.iterations:
-                if max(fitness_list) - min(fitness_list) < self.threshold:
-                    logging.info("No significant improvement for the last " + str(self.iterations) + " iterations.")
-                    logging.info("Stopping at fitness " + str(self.fw_display.best_spark.fitness)
-                                 + " at iteration no. " + str(i))
-                    break
-                else:
-                    fitness_list.pop(0)
+                if len(fitness_list) == self.iterations:
+                    if max(fitness_list) - min(fitness_list) < self.threshold:
+                        logging.info("No significant improvement for the last " + str(self.iterations) + " iterations.")
+                        logging.info("Stopping at fitness " + str(self.fw_display.best_spark.fitness)
+                                     + " at iteration no. " + str(i))
+                        break
+                    else:
+                        fitness_list.pop(0)

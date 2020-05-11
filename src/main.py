@@ -52,16 +52,16 @@ diameter_min = 15
 
 my_display = fireworks.Display(firework_count=15, dimensions_exp_1=5, dimensions_exp_2=21, dimensions_sig_1=96,
                                dimensions_sig_2=5, dimension_exp_min=0, dimension_exp_max=1000, dimension_sig_min=0,
-                               dimension_sig_max=1, diameter_exp_min=15, diameter_exp_max=100, spark_min=10,
+                               dimension_sig_max=0.5, diameter_exp_min=15, diameter_exp_max=100, spark_min=10,
                                spark_max=50, gaussian_spark_count=10,
-                               fitness_function=fitness.fitness_manhattan_similarity_sum, catalog=my_catalog,
+                               fitness_function=fitness.fitness_manhattan_similarity_sum(), catalog=my_catalog,
                                mutational_data=signeR_matrix, spark_dimension_count=12, dimension_limit=False)
 my_display.create_fireworks(None)
 my_display.showtime()
 
-watcher = Watcher(iterations=15, threshold=100, starting_iteration=10, fw_display=my_display)
+watcher = Watcher(iterations=15, threshold=0.001, starting_iteration=100, fw_display=my_display)
 
-watcher.iterate(for_range=range(0, 750), reduction=0.995)
+watcher.iterate(for_range=range(0, 200), reduction=0.99)
 
 logging.info("Finished iterating. Comparing solutions.")
 
@@ -69,9 +69,13 @@ old_reconstructed = np.dot(np.array(signeR_signatures), np.array(signeR_contribu
 new_reconstructed = np.dot(np.array(my_display.best_spark.position_signature).transpose(),
                            np.array(my_display.best_spark.position_exposure).transpose())
 
-FW_result = np.average(paired_distances(
+FW_result_manhattan = np.average(paired_distances(
     np.array(new_reconstructed).reshape(-1, 1), np.array(signeR_matrix).reshape(-1, 1), metric='manhattan'))
-SR_result = np.average(paired_distances(
+SR_result_manhattan = np.average(paired_distances(
     np.array(old_reconstructed).transpose().reshape(-1, 1), np.array(signeR_matrix).reshape(-1, 1), metric='manhattan'))
+FW_result_cosine = np.average(paired_distances(
+    np.array(new_reconstructed), np.array(signeR_matrix), metric='cosine'))
+SR_result_cosine = np.average(paired_distances(
+    np.array(old_reconstructed).transpose(), np.array(signeR_matrix).transpose(), metric='cosine'))
 
 logging.info("The End.")
