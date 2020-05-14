@@ -4,6 +4,7 @@ import sys
 from sklearn.metrics.pairwise import paired_distances
 import numpy as np
 from src import fireworks, fitness
+from sklearn.decomposition import NMF
 
 import pandas as pd
 
@@ -54,14 +55,14 @@ my_display = fireworks.Display(firework_count=15, dimensions_exp_1=5, dimensions
                                dimensions_sig_2=5, dimension_exp_min=0, dimension_exp_max=1000, dimension_sig_min=0,
                                dimension_sig_max=0.5, diameter_exp_min=15, diameter_exp_max=100, spark_min=10,
                                spark_max=50, gaussian_spark_count=10,
-                               fitness_function=fitness.fitness_manhattan_similarity_sum(), catalog=my_catalog,
+                               fitness_function=fitness.fitness_manhattan_similarity_sum, catalog=my_catalog,
                                mutational_data=signeR_matrix, spark_dimension_count=12, dimension_limit=False)
 my_display.create_fireworks(None)
 my_display.showtime()
 
 watcher = Watcher(iterations=15, threshold=0.001, starting_iteration=100, fw_display=my_display)
 
-watcher.iterate(for_range=range(0, 200), reduction=0.99)
+watcher.iterate(for_range=range(0, 200), reduction=0.985)
 
 logging.info("Finished iterating. Comparing solutions.")
 
@@ -77,5 +78,9 @@ FW_result_cosine = np.average(paired_distances(
     np.array(new_reconstructed), np.array(signeR_matrix), metric='cosine'))
 SR_result_cosine = np.average(paired_distances(
     np.array(old_reconstructed).transpose(), np.array(signeR_matrix).transpose(), metric='cosine'))
+FW_result_euclidean = np.average(paired_distances(
+    np.array(new_reconstructed), np.array(signeR_matrix), metric='euclidean'))
+SR_result_euclidean = np.average(paired_distances(
+    np.array(old_reconstructed).transpose(), np.array(signeR_matrix).transpose(), metric='euclidean'))
 
 logging.info("The End.")

@@ -29,3 +29,15 @@ def fitness_cosine_similarity_avg(catalog_matrix, exposure_data, original_data):
     new_matrix = np.dot(np.array(catalog_matrix).transpose(), np.array(exposure_data).transpose())
     similarity = paired_distances(new_matrix, np.array(original_data).transpose(), metric='cosine')
     return - np.average(similarity)
+
+
+def fitness_euclidean_similarity_sum(catalog_matrix, exposure_data, original_data):
+    new_matrix = np.dot(np.array(catalog_matrix).transpose(), np.array(exposure_data).transpose())
+    similarity = paired_distances(new_matrix, np.array(original_data).transpose(), metric='euclidean')
+    return - np.sum(similarity)
+
+
+def fitness_euclidean_similarity_avg(catalog_matrix, exposure_data, original_data):
+    new_matrix = np.dot(np.array(catalog_matrix).transpose(), np.array(exposure_data).transpose())
+    similarity = paired_distances(new_matrix, np.array(original_data).transpose(), metric='euclidean')
+    return - np.average(similarity)

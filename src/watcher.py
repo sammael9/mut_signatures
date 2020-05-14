@@ -15,7 +15,7 @@ class Watcher:
             diameter_max = self.fw_display.diameter_exp_max * reduction
             diameter_min = self.fw_display.diameter_exp_min * reduction
             new_starting_positions = self.fw_display.prepare_new_iteration(False, diameter_max, diameter_min)
-            self.fw_display.create_fireworks(new_starting_positions)
+            self.fw_display.create_fireworks    (new_starting_positions)
             self.fw_display.showtime()
             logging.info("Completed iteration no. " + str(i))
             if i > 9:
