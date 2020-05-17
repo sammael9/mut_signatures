@@ -60,9 +60,9 @@ my_display = fireworks.Display(firework_count=15, dimensions_exp_1=5, dimensions
 my_display.create_fireworks(None)
 my_display.showtime()
 
-watcher = Watcher(iterations=15, threshold=0.001, starting_iteration=100, fw_display=my_display)
+watcher = Watcher(iterations=15, threshold=100, starting_iteration=100, fw_display=my_display)
 
-watcher.iterate(for_range=range(0, 200), reduction=0.985)
+watcher.iterate(for_range=range(0, 300), reduction=0.98)
 
 logging.info("Finished iterating. Comparing solutions.")
 
@@ -77,10 +77,10 @@ SR_result_manhattan = np.average(paired_distances(
 FW_result_cosine = np.average(paired_distances(
     np.array(new_reconstructed), np.array(signeR_matrix), metric='cosine'))
 SR_result_cosine = np.average(paired_distances(
-    np.array(old_reconstructed).transpose(), np.array(signeR_matrix).transpose(), metric='cosine'))
+    np.array(old_reconstructed).transpose(), np.array(signeR_matrix), metric='cosine'))
 FW_result_euclidean = np.average(paired_distances(
     np.array(new_reconstructed), np.array(signeR_matrix), metric='euclidean'))
 SR_result_euclidean = np.average(paired_distances(
-    np.array(old_reconstructed).transpose(), np.array(signeR_matrix).transpose(), metric='euclidean'))
+    np.array(old_reconstructed).transpose(), np.array(signeR_matrix), metric='euclidean'))
 
 logging.info("The End.")
