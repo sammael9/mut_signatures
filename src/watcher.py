@@ -18,7 +18,7 @@ class Watcher:
             self.fw_display.create_fireworks(new_starting_positions)
             self.fw_display.showtime()
             logging.info("Completed iteration no. " + str(i))
-            if i > 9:
+            if i >= self.starting_iteration:
                 fitness_list.append(self.fw_display.best_spark.fitness)
             if len(fitness_list) == self.iterations:
                 if max(fitness_list) - min(fitness_list) < self.threshold:

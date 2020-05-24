@@ -1,0 +1,20 @@
+{
+  "sample": ["colon1"],
+  "fireworks_count": 15,
+  "dimensions": 30,
+  "dimension_min": 0,
+  "dimension_max": 1000,
+  "diameter_min": 15,
+  "diameter_max": 1000,
+  "spark_min": 10,
+  "spark_max": 50,
+  "gaussian_spark_count": 10,
+  "fitness_function": "cosine",
+  "spark_dimension_count": 12,
+  "dimension_limit": "False",
+  "watcher_iterations": 15,
+  "watcher_threshold": 0.001,
+  "watcher_starting_iteration": 10,
+  "watcher_range": 250,
+  "watcher_reduction": 0.98
+}
