@@ -1,5 +1,5 @@
 {
-  "sample": ["colon1"],
+  "sample": ["colon1","colon2","colon3","intestine1","intestine2","intestine3","liver1","liver2","liver3"],
   "fireworks_count": 15,
   "dimensions": 30,
   "dimension_min": 0,
@@ -9,7 +9,7 @@
   "spark_min": 10,
   "spark_max": 50,
   "gaussian_spark_count": 10,
-  "fitness_function": "cosine",
+  "fitness_function": "manhattan_sum",
   "spark_dimension_count": 12,
   "dimension_limit": "False",
   "watcher_iterations": 15,

@@ -1,0 +1,134 @@
+{
+  "test_matrix": {
+    "tests": [
+      {
+        "test_cosine": {
+          "sample": [
+            "colon1","colon2","colon3","intestine1","intestine2","intestine3","liver1","liver2","liver3"
+          ],
+          "fireworks_count": 15,
+          "dimensions": 30,
+          "dimension_min": 0,
+          "dimension_max": 1000,
+          "diameter_min": 15,
+          "diameter_max": 1000,
+          "spark_min": 10,
+          "spark_max": 50,
+          "gaussian_spark_count": 10,
+          "fitness_function": "cosine",
+          "spark_dimension_count": 12,
+          "dimension_limit": "False",
+          "watcher_iterations": 15,
+          "watcher_threshold": 0.001,
+          "watcher_starting_iteration": 10,
+          "watcher_range": 250,
+          "watcher_reduction": 0.98,
+          "results": {
+            "FW_result_manhattan": 82.59929758459994,
+            "MP_result_manhattan": 1.537521739162037,
+            "FW_result_euclidean": 1083.3242040996133,
+            "MP_result_euclidean": 20.495986475099066,
+            "FW_result_cosine": 0.12307053003807154,
+            "MP_result_cosine": 0.050824634196614385
+          }
+        }
+      },
+      {
+        "test_euclidean": {
+          "sample": [
+            "colon1","colon2","colon3","intestine1","intestine2","intestine3","liver1","liver2","liver3"
+          ],
+          "fireworks_count": 15,
+          "dimensions": 30,
+          "dimension_min": 0,
+          "dimension_max": 1000,
+          "diameter_min": 15,
+          "diameter_max": 1000,
+          "spark_min": 10,
+          "spark_max": 50,
+          "gaussian_spark_count": 10,
+          "fitness_function": "euclidean",
+          "spark_dimension_count": 12,
+          "dimension_limit": "False",
+          "watcher_iterations": 15,
+          "watcher_threshold": 0.001,
+          "watcher_starting_iteration": 10,
+          "watcher_range": 250,
+          "watcher_reduction": 0.98,
+          "results": {
+            "FW_result_manhattan": 8.529485662064317,
+            "MP_result_manhattan": 1.537521739162037,
+            "FW_result_euclidean": 111.00101846285928,
+            "MP_result_euclidean": 20.495986475099066,
+            "FW_result_cosine": 0.2889551076071971,
+            "MP_result_cosine": 0.050824634196614385
+          }
+        }
+      },
+      {
+        "test_manhattan_avg": {
+          "sample": [
+            "colon1","colon2","colon3","intestine1","intestine2","intestine3","liver1","liver2","liver3"
+          ],
+          "fireworks_count": 15,
+          "dimensions": 30,
+          "dimension_min": 0,
+          "dimension_max": 1000,
+          "diameter_min": 15,
+          "diameter_max": 1000,
+          "spark_min": 10,
+          "spark_max": 50,
+          "gaussian_spark_count": 10,
+          "fitness_function": "manhattan_avg",
+          "spark_dimension_count": 12,
+          "dimension_limit": "False",
+          "watcher_iterations": 15,
+          "watcher_threshold": 0.001,
+          "watcher_starting_iteration": 10,
+          "watcher_range": 250,
+          "watcher_reduction": 0.98,
+          "results": {
+            "FW_result_manhattan": 7.883910990274772,
+            "MP_result_manhattan": 1.537521739162037,
+            "FW_result_euclidean": 125.52847728545713,
+            "MP_result_euclidean": 20.495986475099066,
+            "FW_result_cosine": 0.3350180308047684,
+            "MP_result_cosine": 0.050824634196614385
+          }
+        }
+      },
+      {
+        "test_manhattan_sum": {
+          "sample": [
+            "colon1","colon2","colon3","intestine1","intestine2","intestine3","liver1","liver2","liver3"
+          ],
+          "fireworks_count": 15,
+          "dimensions": 30,
+          "dimension_min": 0,
+          "dimension_max": 1000,
+          "diameter_min": 15,
+          "diameter_max": 1000,
+          "spark_min": 10,
+          "spark_max": 50,
+          "gaussian_spark_count": 10,
+          "fitness_function": "manhattan_sum",
+          "spark_dimension_count": 12,
+          "dimension_limit": "False",
+          "watcher_iterations": 15,
+          "watcher_threshold": 0.001,
+          "watcher_starting_iteration": 10,
+          "watcher_range": 250,
+          "watcher_reduction": 0.98,
+          "results": {
+            "FW_result_manhattan": 7.828746958452619,
+            "MP_result_manhattan": 1.537521739162037,
+            "FW_result_euclidean": 123.52512021491128,
+            "MP_result_euclidean": 20.495986475099066,
+            "FW_result_cosine": 0.37777905969797704,
+            "MP_result_cosine": 0.050824634196614385
+          }
+        }
+      }
+    ]
+  }
+}
