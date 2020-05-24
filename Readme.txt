@@ -1,4 +1,10 @@
-To run the project, execute main.py using a python 3.6 with all loaded requirements in requirements.txt.
+Bc. Filip Varga - AIS ID 79794
+MUTATIONAL SIGNATURES ESTIMATION TOOL USING MODIFIED FIREWORK ALGORITHM
+
+
+To run the project, execute main.py in source folder using a python 3.6 with all loaded libraries in requirements.txt.
+
+Logs will be saved to example.log file in src folder.
 
 In the project, you need to set and assign which file you are analyzing.
 The default file with 9 samples is mut_mat.csv.
@@ -51,3 +57,29 @@ We evaluated manhattan_avg, euclidean_avg and cosine_avg for each.
 
 MP - mutationalpatterns (state-of-the-art software)
 FW - our algorithm
+
+The application prints these results upon finishing.
+
+Overview of project structure:
+
+ROOT folder
+Readme.txt - this file
+results_testing_matrix/vector.json - results from my tests
+requirements.txt - required libraries, IDEs such as pycharm should install automatically
+data_analysis - some basic analysis done in jupyter notebook
+
+SRC folder
+__init__.py - just python stuff
+fireworks.py - the framework of the algorithm with classes Display, Spark and Firework
+fitness.py - various fitness functions
+main.py - the main script that loads data and runs the algorithm, outputs result to console
+watcher.py - helper class to monitor the progress of the algorithm, iterate it and stop it when needed
+
+RESOURCES folder
+21_breast_cancers.mutations.txt - an extra sample input file with 21 samples
+21_breast_cancers.opportunity.txt - additional input to 21_breast_cancers (divides the matrix elementwise)
+cancer_signatures.csv - cosmic_mutations.csv - various formats of the COSMIC catalog with 30 signatures
+contribution.csv - MutationalPatterns example output of Expression matrix
+mut_mat.csv - main input file we used in evaluations with 9 samples
+reconstructed.csv - dot product of COSMIC catalog and contribution.csv
+settings.json - settings for the algorithm
