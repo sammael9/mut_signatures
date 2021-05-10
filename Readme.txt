@@ -21,7 +21,7 @@ Settings.json serve to configure the algorithm.
   "dimension_min": 0,
   "dimension_max": 1000,
   "diameter_min": 15,
-  "diameter_max": 1000,
+  "diameter_max": 100,
   "spark_min": 10,
   "spark_max": 50,
   "gaussian_spark_count": 10,

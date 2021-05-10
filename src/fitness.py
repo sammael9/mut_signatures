@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 
-def fitness_random(catalog_matrix, exposure_data, original_data):
+def fitness_random():
     return random.uniform(0, 1)
 
 
