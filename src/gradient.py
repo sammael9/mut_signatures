@@ -6,7 +6,7 @@ import numpy as np
 
 class PGD:
 
-    def __init__(self, catalog, mutational_data, dimensions, dimensions2, dimension_min, dimension_max, alpha):
+    def __init__(self, catalog, mutational_data, dimensions, dimensions2, dimension_min, dimension_max, alpha, beta):
         self.dimensions2 = dimensions2
         self.dimensions = dimensions
         self.dimension_max = dimension_max
@@ -29,7 +29,7 @@ class PGD:
             for _ in range(0, self.dimensions):
                 expression_dimension.append(0)
             tmp_xpr.append(expression_dimension)
-        self.expressions = np.array(tmp_xpr)
+        self.exposures = np.array(tmp_xpr)
         tmp = []
         for _ in range(0, self.dimensions2):
             tmp_dimension = []
@@ -39,56 +39,49 @@ class PGD:
         self.residuals = np.array(tmp)
         self.result = np.array(tmp)
         self.alpha = alpha
-
-        print("catalog")
-        print(self.catalog)
-        print("expressions")
-        print(self.expressions)
+        self.beta = beta
+        logging.debug("Initialized catalog")
+        logging.debug(self.catalog)
+        logging.debug("Initialized exposures")
+        logging.debug(self.exposures)
 
     def run_de_novo(self, iterations):
         while self.iteration < iterations:
-            logging.info("Iteration no. " + str(self.iteration))
-
-            self.result = np.dot(self.catalog, self.expressions.transpose())
+            logging.debug("Iteration no. " + str(self.iteration))
+            logging.debug("Catalog matrix")
+            logging.debug(self.catalog)
+            logging.debug("Exposure matrix")
+            logging.debug(self.exposures)
+            self.result = np.dot(self.catalog, self.exposures.transpose())
             self.residuals = self.mutational_data - self.result
 
-            self.expressions = self.expressions + (self.alpha * np.dot(self.catalog.transpose(), self.residuals)).transpose()
+            self.exposures = self.exposures + (
+                        self.alpha * np.dot(self.catalog.transpose(), self.residuals)).transpose()
 
-            self.result = np.dot(self.catalog, self.expressions.transpose())
+            self.result = np.dot(self.catalog, self.exposures.transpose())
             self.residuals = self.mutational_data - self.result
 
-            self.catalog = abs(self.catalog * (1 + (self.alpha / 5000000000) * np.dot(self.residuals, self.expressions)))
+            self.catalog = abs(self.catalog * (1 + self.beta * np.dot(self.residuals, self.exposures)))
 
-            np.clip(self.expressions, a_min=0, a_max=1000000, out=self.expressions)
+            np.clip(self.exposures, a_min=0, a_max=self.dimension_max, out=self.exposures)
             np.clip(self.catalog, a_min=0, a_max=1.0, out=self.catalog)
-
-           # for i in range(0, self.dimensions2):
-           #     smallest = self.expressions[i].argsort()[:40]
-           #     self.expressions[i][smallest] = 0
-
-       #     if self.iteration == 10000:
-       #
-
-       #np.savetxt(r'../resources/output_catalog_' + str(self.iteration) + '.csv', self.catalog, delimiter=",")
 
             self.iteration = self.iteration + 1
 
-        return self.expressions, self.catalog
+        return self.exposures, self.catalog
 
     def run_fitting(self, iterations):
         while self.iteration < iterations:
             self.iteration = self.iteration + 1
-            logging.info("Iteration no. " + str(self.iteration))
-            self.result = np.dot(self.catalog, self.expressions.transpose())
+            logging.debug("Iteration no. " + str(self.iteration))
+            logging.debug("Exposure matrix")
+            logging.debug(self.exposures)
+            self.result = np.dot(self.catalog, self.exposures.transpose())
             self.residuals = self.mutational_data - self.result
 
-            self.expressions = self.expressions + (self.alpha * np.dot(self.catalog.transpose(),
-                                                                       self.residuals)).transpose()
+            self.exposures = self.exposures + (self.alpha * np.dot(self.catalog.transpose(),
+                                                                   self.residuals)).transpose()
 
-            np.clip(self.expressions, a_min=0, a_max=1000000, out=self.expressions)
+            np.clip(self.exposures, a_min=0, a_max=self.dimension_max, out=self.exposures)
 
-            for i in range(0, self.dimensions2):
-                smallest = self.expressions[i].argsort()[:50]
-                self.expressions[i][smallest] = 0
-
-        return self.expressions
+        return self.exposures

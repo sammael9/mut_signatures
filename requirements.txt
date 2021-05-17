@@ -1,3 +1,5 @@
+scipy
+matplotlib
 seaborn
 tensorflow
 pandas

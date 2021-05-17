@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 
 
 class Watcher:
@@ -17,13 +16,13 @@ class Watcher:
             new_starting_positions = self.fw_display.prepare_new_iteration(False, diameter_max, diameter_min)
             self.fw_display.create_fireworks(new_starting_positions)
             self.fw_display.showtime()
-            logging.info("Completed iteration no. " + str(i))
+            logging.debug("Completed iteration no. " + str(i))
             if i >= self.starting_iteration:
                 fitness_list.append(self.fw_display.best_spark.fitness)
             if len(fitness_list) == self.iterations:
                 if max(fitness_list) - min(fitness_list) < self.threshold:
-                    logging.info("No significant improvement for the last " + str(self.iterations) + " iterations.")
-                    logging.info("Stopping at fitness " + str(self.fw_display.best_spark.fitness)
+                    logging.debug("No significant improvement for the last " + str(self.iterations) + " iterations.")
+                    logging.debug("Stopping at fitness " + str(self.fw_display.best_spark.fitness)
                                  + " at iteration no. " + str(i))
                     break
                 else:

@@ -6,80 +6,45 @@ To run the project, execute main.py in source folder using a python 3.6 with all
 
 Logs will be saved to example.log file in src folder.
 
-In the project, you need to set and assign which file you are analyzing.
-The default file with 9 samples is mut_mat.csv.
-Default catalog is cancer_signatures or cosmic_mutations csv files.
-Reconstructed output from the MutationalPatterns software is reconstructed.csv - expression matrix is in contribution.csv.
-Second input file is 21_breast_cancers.mutations.txt, also csv format.
-
-Settings.json serve to configure the algorithm.
-
-{
-  "sample": ["colon1"],
-  "fireworks_count": 15,
-  "dimensions": 30,
-  "dimension_min": 0,
-  "dimension_max": 1000,
-  "diameter_min": 15,
-  "diameter_max": 100,
-  "spark_min": 10,
-  "spark_max": 50,
-  "gaussian_spark_count": 10,
-  "fitness_function": "cosine",
-  "spark_dimension_count": 12,
-  "dimension_limit": "False",
-  "watcher_iterations": 15,
-  "watcher_threshold": 0.001,
-  "watcher_starting_iteration": 10,
-  "watcher_range": 250,
-  "watcher_reduction": 0.98
-}
-
-sample - list of column names of samples to analyze
-fireworks_count - number of fireworks in iteration
-dimensions - number of signatures (must correspond to signature count in your catalog)
-dimension_min - minimum value for a dimension, should be 0 for NMF
-dimension_max - maximum value for a dimension, by default we use 1000 based on outputs from MutationalPatterns software
-spark_min - number of sparks generated at maximum diameter
-spark_max - number of sparks generated at minimum diameter
-gaussian_spark_count - number of gaussian sparks generated after firework sparks are generated and evaluated
-fitness_function - fitness function, can be manhattan_avg, manhattan_sum, euclidean or cosine, best performance on manhattan_sum and euclidean
-spark_dimension_count - the limit of dimensions in which a spark can exist (actual limit will be random between this number and halfway between this number and number of dimensions)
-dimension_limit - activates dimension limiting (spark_dimension_count has no meaning without it)
-watcher_iterations - shows the evaluated dimension interval by the watcher, the higher the number, the more strict it is
-watcher_threshold - threshold for the min-max difference of the interval, needs to be set individually for each fitness function (ideally around 1 for manhattan_sum, 0.001, cosine, 0.01 manhattan_avg and 0.1 for euclidean)
-watcher_starting_iteration - at which iteration watcher starts checking the progress
-watcher_range - max number of iterations, 100-1000 expected
-watcher_reduction - alfa reduction of min and max diameters per iteration, ideally number between 0.95 - 0.995
-
-Results for tests are in results_testing_vector.json and results_testing_matrix.json.
-We evaluated manhattan_avg, euclidean_avg and cosine_avg for each.
-
-MP - mutationalpatterns (state-of-the-art software)
-FW - our algorithm
-
-The application prints these results upon finishing.
-
-Overview of project structure:
-
-ROOT folder
-Readme.txt - this file
-results_testing_matrix/vector.json - results from my tests
-requirements.txt - required libraries, IDEs such as pycharm should install automatically
-data_analysis - some basic analysis done in jupyter notebook
-
-SRC folder
-__init__.py - just python stuff
-fireworks.py - the framework of the algorithm with classes Display, Spark and Firework
-fitness.py - various fitness functions
-main.py - the main script that loads data and runs the algorithm, outputs result to console
-watcher.py - helper class to monitor the progress of the algorithm, iterate it and stop it when needed
-
-RESOURCES folder
-21_breast_cancers.mutations.txt - an extra sample input file with 21 samples
-21_breast_cancers.opportunity.txt - additional input to 21_breast_cancers (divides the matrix elementwise)
-cancer_signatures.csv - cosmic_mutations.csv - various formats of the COSMIC catalog with 30 signatures
-contribution.csv - MutationalPatterns example output of Expression matrix
-mut_mat.csv - main input file we used in evaluations with 9 samples
-reconstructed.csv - dot product of COSMIC catalog and contribution.csv
-settings.json - settings for the algorithm
+resources		directory with data files
+	/21_breast_cancers.mutations.txt	mutation matrix with 21 breast cancer 
+samples from signeR
+	/21_breast_cancers.opportunty.txt	opportunity matrix for the 
+21_breast_cancers mutation matrix
+	/cancer_signatures.csv		COSMIC mutational catalog dataset
+	/cotribution.csv		example of an exposure matrix output of 
+MutationalPatterns
+	/cosmic_mutations.csv		COSMIC mutational catalog dataset, 
+oldest version with 30 signatures 
+	/COSMIC_v3.2_SBS_GRCh37.txt	COSMIC mutational catalog dataset, latest version with 78 signatures
+	/mousetohuman_normalization.txt	normalization for data in medium sized dataset, with ratios of triplet occurrences between mouse and human
+	/mut_mat.csv		mutational profile input from 
+MutationalPatterns with 9 samples
+	/PCAWG_signatures.csv		COSMIC mutational catalog dataset, older version with 65 signatures
+	/reconstruced.csv		reconstructed mutational matrix using the 
+COSMIC catalog and contribution.csv
+	/SBS96.csv		medium sized dataset with 181 samples from Sanger mice experiment
+	/settings.json		file with settings dictionary for algorithms
+	/SG_exp_181.csv		exposure matrix generated by SigneR for the 181 sample dataset
+	/SG_sig_181.csv		catalog matrix generated by SigneR for the 181 sample dataset
+	/WGS_PCAWG.96.csv		dataset no. 3, with 2780 samples, used to extract latest COSMIC signatures
+	/outputs		directory with example stored outputs
+		/analysis_cos_cosmic_sim.csv	cosine similarities between COSMIC signatures
+		/analysis_cos_sim.csv	cosine similarities between generated PGD signatures and COSMIC signatures
+		/*heatmap.png files	heatmaps of cosine similarities between COSMIC, PGD and SIGNER catalogs
+		/output_catalog_2780.csv	best generated catalog with 78 signatures, generated by PGD
+		/output_exposures_2780.csv	exposures for the best catalog with 78 signatures, generated by PGD
+		/output_exposures_dat1.csv	exposures for fitting using PGD with initial dataset from MutationalPatterns
+		/results_testing_matrix.json	stored state of FA using matrix spark representation in JSON format 
+		/results_testing_vector.json	stored state of FA using vector spark representation in JSON format
+src			directory with project implementation
+	/analysis.py		analytic script to generate heatmaps of 
+cosine similarities between signatures
+	/fireworks.py		implementation of FA algorithm
+	/fitness.py		fitness function implementation
+	/gradient.py		implementation of PGD algorithm
+	/main.py		example script for signature profiling
+	/watcher.py		watcher implementation
+data_analysis.ipynb		Jupyter notebook with data analysis
+requirements.txt		required libraries, should be installed upon 
+importing project into an IDE

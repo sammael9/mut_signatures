@@ -1,41 +1,14 @@
 import pandas as pd
 import seaborn as sb
-from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
-import numpy as np
 from scipy import spatial
-from sklearn.metrics.pairwise import paired_distances
 
-iteration = 9500
-
-#while iteration <= 5000:
+# This script generates heatmaps from the results of signature profiling
 
 signatures: pd.DataFrame = pd.read_csv(r'../resources/COSMIC_v3.2_SBS_GRCh37.txt', delimiter='\t')
 signatures = signatures.sort_values(by=['Mutation type', 'Trinucleotide'], ascending=[True, True])
 
-#original: pd.DataFrame = pd.read_csv(r'../resources/WGS_PCAWG.96.csv', delimiter=',')
-#original = original.sort_values(by= ['Trinucleotide', 'Mutation type'], ascending=[True, True])
-
 signatures.drop(columns=['Mutation type', 'Trinucleotide'], inplace=True)
-
-#if iteration % 9500 == 0:
-
-#    data: pd.DataFrame = pd.read_csv(r'../resources/output_catalog_' + str(iteration) + '.csv', delimiter=',',
-#                                     header=None)
-#    result = pd.concat([data, signatures], axis=1)
- #   correlations = result.corr(method='pearson')
-
-  #  slice = correlations.iloc[0:130, 0:130]
-
- #   s = slice.unstack()
- #   so = s.sort_values(kind="quicksort")
- #   res = so[-9:]
-
-  #  plot = sb.heatmap(correlations.iloc[0:130, 0:130], vmin=-1.0, vmax=1.0)
-  #  plt.savefig(r'../resources/' + str(iteration) + '.pdf')
-  #  plt.clf()
-
-    #iteration = iteration + 1
 
 data: pd.DataFrame = pd.read_csv(r'../resources/output_catalog_2780.csv', delimiter=',', header=None)
 
@@ -81,11 +54,7 @@ plot3 = sb.heatmap(similarities_3, vmin=0.0, vmax=1.0, cmap="RdYlGn", xticklabel
 plt.savefig(r'../resources/cosine_intersimilarity_our_heatmap.png', dpi=500)
 plt.clf()
 
-#print(1-spatial.distance.cosine())
-
 similarities_1.to_csv(r'../resources/analysis_cos_sim.csv')
 similarities_2.to_csv(r'../resources/analysis_cos_cosmic_sim.csv')
 similarities_3.to_csv(r'../resources/analysis_cos_our_sim.csv')
-
-print("Bye")
 

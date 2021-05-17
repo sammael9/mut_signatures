@@ -22,13 +22,13 @@ class Display:
         self.fitness_function = fitness_function
         self.catalog = catalog
         self.mutational_data = mutational_data
-        logging.info("Created new FireworksDisplay")
-        logging.info("Firework Count: " + str(firework_count))
-        logging.info("Dimensions: " + str(dimensions))
-        logging.info("Dimension min max: " + str(dimension_min) + " " + str(dimension_max))
-        logging.info("Firework Diameter min max " + str(diameter_min) + " " + str(diameter_max))
-        logging.info("Spark min max " + str(spark_min) + " " + str(spark_max))
-        logging.info("Gaussian Spark Count: " + str(gaussian_spark_count))
+        logging.debug("Created new FireworksDisplay")
+        logging.debug("Firework Count: " + str(firework_count))
+        logging.debug("Dimensions: " + str(dimensions))
+        logging.debug("Dimension min max: " + str(dimension_min) + " " + str(dimension_max))
+        logging.debug("Firework Diameter min max " + str(diameter_min) + " " + str(diameter_max))
+        logging.debug("Spark min max " + str(spark_min) + " " + str(spark_max))
+        logging.debug("Gaussian Spark Count: " + str(gaussian_spark_count))
         self.history = []
         self.fireworks = []
         self.iteration = 0
@@ -37,15 +37,16 @@ class Display:
         self.gaussian_sparks = []
         self.spark_dimension_count = spark_dimension_count
         self.dimension_limit = dimension_limit
+        self.create_fireworks(None)
 
     def create_fireworks(self, selected_positions):
         self.fireworks = []
         self.gaussian_sparks = []
         self.best_solution = None
-        logging.info("Instantiating fireworks")
+        logging.debug("Instantiating fireworks")
         if selected_positions is None:
             for i in range(0, self.firework_count):
-                logging.info("Firework " + str(i + 1) + " / " + str(self.firework_count))
+                logging.debug("Firework " + str(i + 1) + " / " + str(self.firework_count))
                 diameter = random.uniform(self.diameter_min, self.diameter_max)
                 spark_count = self.count_sparks(diameter)
                 firework_dimensions = []
@@ -58,7 +59,7 @@ class Display:
                                                self.dimension_min, self.spark_dimension_count, self.dimension_limit))
         else:
             for index, spark in enumerate(selected_positions):
-                logging.info("Firework " + str(index + 1) + " / " + str(self.firework_count))
+                logging.debug("Firework " + str(index + 1) + " / " + str(self.firework_count))
                 diameter = random.uniform(self.diameter_min, self.diameter_max)
                 spark_count = self.count_sparks(diameter)
                 self.fireworks.append(Firework(diameter, spark_count, spark.position, self.dimension_max,
@@ -66,20 +67,20 @@ class Display:
 
     def showtime(self):
         self.iteration += 1
-        logging.info("Showtime, iteration no. " + str(self.iteration))
+        logging.debug("Showtime, iteration no. " + str(self.iteration))
         for firework in self.fireworks:
             firework.explode()
-        logging.info("Finding best solutions.")
+        logging.debug("Finding best solutions.")
         self.evaluate(self.fitness_function)
         self.find_best_solution()
         to_select = self.fireworks.copy()
         to_select.remove(self.best_solution)
         selected_solutions = random.choices(to_select, k=self.gaussian_spark_count)
-        logging.info("Generating " + str(self.gaussian_spark_count) + " Gaussian sparks.")
+        logging.debug("Generating " + str(self.gaussian_spark_count) + " Gaussian sparks.")
         for selected_solution in selected_solutions:
             self.gaussian_sparks.append(self.generate_gaussian_spark(selected_solution.best_spark))
         self.evaluate_gaussian(self.fitness_function)
-        logging.info("Showtime over.")
+        logging.debug("Showtime over.")
 
     def prepare_new_iteration(self, random_selection, new_diameter_max, new_diameter_min):
         self.diameter_max = new_diameter_max
@@ -87,7 +88,7 @@ class Display:
         position_list = list(map(lambda x: x.best_spark, self.fireworks))
         position_list = position_list + self.gaussian_sparks
         sorted_list = sorted(position_list, key=lambda spark: spark.fitness, reverse=True)
-        logging.info("Current best solution has fitness: " + str(sorted_list[0].fitness))
+        logging.debug("Current best solution has fitness: " + str(sorted_list[0].fitness))
         self.best_spark = sorted_list[0]
         if random_selection:
             return random.sample(sorted_list, self.firework_count)
@@ -128,7 +129,7 @@ class Display:
 
     def archive(self):
         self.history.append(self.fireworks)
-        logging.info("Archiving current state. History size: " + str(len(self.history)))
+        logging.debug("Archiving current state. History size: " + str(len(self.history)))
 
     def find_best_solution(self):
         self.best_solution = max(self.fireworks, key=lambda firework: firework.best_spark.fitness)
@@ -138,10 +139,10 @@ class Firework:
 
     def __init__(self, diameter, spark_count, dimensions, dimension_max, dimension_min, spark_dimension_count,
                  dimension_limit):
-        logging.info("Created firework")
-        logging.info("Diameter " + str(diameter))
-        logging.info("Spark count " + str(spark_count))
-        logging.info("Position " + str(dimensions))
+        logging.debug("Created firework")
+        logging.debug("Diameter " + str(diameter))
+        logging.debug("Spark count " + str(spark_count))
+        logging.debug("Position " + str(dimensions))
         self.diameter = diameter
         self.spark_count = spark_count
         self.dimensions = dimensions
@@ -188,5 +189,5 @@ class Spark:
     def __init__(self, position):
         self.fitness = -1000000
         self.position = []
-        # logging.info("Created Spark at " + str(position))
+        # logging.debug("Created Spark at " + str(position))
         self.position = position
